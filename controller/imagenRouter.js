@@ -6,9 +6,9 @@ const formidable = require("formidable");
 
 // Configuración de Cloudinary
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: dmit5xgnp,
+    api_key: 945297963667886,
+    api_secret: BiO35Sy002kyk0dL_9qZKgADTUE,
 });
 
 router.post("/", async (req, res) => {
