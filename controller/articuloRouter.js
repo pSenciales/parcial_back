@@ -56,22 +56,21 @@ router.get("/:id", async (req, res) => {
 // Crear un nuevo artículo
 // Interactúa CON WIKI (MICROSERVICIO)
 router.post('/nuevo', async (req, res) => {
-    const {nombre, foto } = req.body;
+    console.log('Método HTTP:', req.method);
+    console.log('Cuerpo de la solicitud:', req.body);
+
+    const { nombre, foto } = req.body;
 
     try {
-        // Crear el nuevo artículo en la base de datos
-        const nuevoArticulo = await Articulo.create({
-            nombre,
-            foto
-        });
+        const nuevoArticulo = await Articulo.create({ nombre, foto });
         console.log('Artículo creado con éxito:', nuevoArticulo);
-        // Responder con el artículo creado
         res.status(201).json(nuevoArticulo);
     } catch (error) {
-        console.error('Error al crear artículo:', error);
-        res.status(500).json({ message: 'Error al crear artículo y la primera versión', error: error.message });
+        console.error('Error al crear el artículo:', error);
+        res.status(500).json({ message: 'Error al crear artículo', error: error.message });
     }
 });
+
 
 
 //Update
