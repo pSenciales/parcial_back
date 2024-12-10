@@ -22,7 +22,6 @@ router.post("/", async (req, res) => {
 
             const { id } = fields;
             const imageFile = files.image;
-            console.log(`id: ${id}\ndescripcion: ${descripcion}\nimagen: ${imageFile}`);
             if (!id) {
                 return res.status(400).json({ message: "Faltan datos obligatorios (id)" });
             } else if (!imageFile) {
