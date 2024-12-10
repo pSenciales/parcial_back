@@ -3,6 +3,10 @@ require('dotenv').config();
 const cors = require('cors');
 const PORT = 4000;
 
+const imagenesRouter = require("./controller/imagenRouter");
+const articulosRouter = require("./controller/articuloRouter");
+
+
 const app = express();
 app.use(cors());
 
@@ -19,5 +23,8 @@ app.get("/", (req,res) =>{
 app.listen(PORT, () => {
   console.log('Backend escuchando en http://localhost:4000');
 });
+
+app.use("/imagenes", imagenesRouter);
+app.use("/articulos", articulosRouter);
 
 module.exports = app;
