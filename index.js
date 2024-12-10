@@ -8,11 +8,7 @@ const articulosRouter = require("./controller/articuloRouter");
 
 
 const app = express();
-app.use(cors({
-    origin: '*', // Permitir cualquier origen
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
-}));
+app.use(cors());
 
 app.use(express.json());
 
