@@ -73,28 +73,23 @@ router.post('/nuevo', async (req, res) => {
 
 router.put("/imagen/:id", async (req, res) => {
     let id = req.params.id;
-    let {url, descripcion} = req.body;
+    let { url, descripcion } = req.body;
     if (!id) {
-        res.status(400).send("Bad request, falta el campo id");
-    } else {
-        try {
-            const articulo = await Articulo.findById(id)
-                .then(async (resultado) => {
-                    if (!resultado) {
-                        res.status(404).send("Not found, no existe articulo con ese id");
-                    }
-                    else {
-                        articulo.fotos.push({url:url,descripcion:descripcion[0]});
-                        await articulo.save();
-                        res.status(200).send("articulo actualizado:/n " + JSON.stringify(resultado));
-                    }
-                });
-
-        } catch (error) {
-            res.status(500).send("Error al actualizar el articulo: " + error);
-        }
+        return res.status(400).send("Bad request, falta el campo id");
     }
-})
+    try {
+        const articulo = await Articulo.findById(id);
+        if (!articulo) {
+            return res.status(404).send("Not found, no existe articulo con ese id");
+        }
+        articulo.fotos.push({ url, descripcion: descripcion[0] });
+        await articulo.save();
+        res.status(200).send("articulo actualizado:\n " + JSON.stringify(articulo));
+    } catch (error) {
+        res.status(500).send("Error al actualizar el articulo: " + error);
+    }
+});
+
 
 //Update
 router.put("/:id", async (req, res) => {
