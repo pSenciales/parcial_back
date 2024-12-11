@@ -8,9 +8,20 @@ connectBD("admin", "admin").then(()=>{
     console.log("Error al conectar a Mongo (articulos) "+ error);
 });
 
+const AdjuntosSchema = new Schema({
+    url: String,
+    descripcion: String
+  });
+
+  const MapasSchema = new Schema({
+    latitud: Number,
+    longitud: Number
+  });
+
 const ArticuloSchema = new Schema({
     nombre: { type: String, required: true },
-    foto : {type: String},
+    fotos: [AdjuntosSchema],
+    coordenadas: {type:[MapasSchema]},
     fecha: { type: Date, default: Date.now }
 });
 
