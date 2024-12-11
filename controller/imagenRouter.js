@@ -53,7 +53,7 @@ router.post("/", async (req, res) => {
                 }
 
                 // Hacer la petición PUT a tu API
-                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/articulos/imagen${id}`, {
+                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/articulos/imagen/${id}`, {
                     url: uploadResult.secure_url,
                     descripcion: descripcion,
                 });
