@@ -20,10 +20,12 @@ router.post("/", async (req, res) => {
                 return res.status(400).json({ message: "Error al procesar la solicitud", error: err });
             }
 
-            const { id } = fields;
+            const { id, descripcion } = fields;
             const imageFile = files.image;
             if (!id) {
                 return res.status(400).json({ message: "Faltan datos obligatorios (id)" });
+            } else if (!descripcion) {
+                return res.status(400).json({ message: "Faltan datos obligatorios (descripcion)" });
             } else if (!imageFile) {
                 return res.status(400).json({ message: "Faltan datos obligatorios (imagen)" });
             }
@@ -75,6 +77,40 @@ router.post("/", async (req, res) => {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
 });
+
+router.delete("/", async (req, res) => {
+    const { url } = req.query; // Usamos req.query para acceder a los parámetros de consulta
+
+    if (!url) {
+        return res.status(400).json({ message: "La URL de la imagen es obligatoria" });
+    }
+
+    try {
+        // Extraer el public_id de la URL
+        const regex = /\/v\d+\/(.+)\./; // Busca el public_id dentro de la URL
+        const match = url.match(regex);
+        if (!match || !match[1]) {
+            return res.status(400).json({ message: "No se pudo extraer el public_id de la URL" });
+        }
+
+        const public_id = match[1];
+
+        // Eliminar la imagen de Cloudinary
+        const result = await cloudinary.uploader.destroy(public_id);
+
+        if (result.result === "ok") {
+            return res.status(200).json({ message: "Imagen eliminada con éxito", public_id });
+        } else if (result.result === "not found") {
+            return res.status(404).json({ message: "La imagen no fue encontrada en Cloudinary", public_id });
+        } else {
+            throw new Error("No se pudo eliminar la imagen");
+        }
+    } catch (error) {
+        console.error("Error al eliminar la imagen:", error.message);
+        return res.status(500).json({ message: "Error al eliminar la imagen", error: error.message });
+    }
+});
+
 
 router.delete("/", async (req, res) => {
     const { url } = req.query; // Usamos req.query para acceder a los parámetros de consulta
