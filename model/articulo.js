@@ -21,7 +21,7 @@ const AdjuntosSchema = new Schema({
 const ArticuloSchema = new Schema({
     nombre: { type: String, required: true },
     fotos: [AdjuntosSchema],
-    coordenadas: {type:[MapasSchema]},
+    coordenadas: [MapasSchema],
     fecha: { type: Date, default: Date.now }
 });
 
