@@ -59,10 +59,25 @@ router.post('/nuevo', async (req, res) => {
     console.log('Método HTTP:', req.method);
     console.log('Cuerpo de la solicitud:', req.body);
 
-    const { nombre, foto } = req.body;
+    const { autor, nombre, foto, coordenadas } = req.body;
 
     try {
-        const nuevoArticulo = await Articulo.create({ nombre, foto });
+        let coordenadasObj = coordenadas;
+        if (typeof coordenadas === "string") {
+            try {
+                coordenadasObj = JSON.parse(coordenadas);  // Convertir la cadena JSON a objeto
+            } catch (e) {
+                // Si no es posible hacer el parseo, lanzamos un error
+                console.error("Error al parsear las coordenadas:", e);
+                return res.status(400).json({ message: "Las coordenadas no tienen el formato correcto." });
+            }
+        }
+
+        // Asegúrate de que las coordenadas ahora son un array de objetos
+        if (!Array.isArray(coordenadasObj)) {
+            return res.status(400).json({ message: "Las coordenadas deben ser un array." });
+        }
+        const nuevoArticulo = await Articulo.create({autor, nombre, foto, coordenadas });
         console.log('Artículo creado con éxito:', nuevoArticulo);
         res.status(201).json(nuevoArticulo);
     } catch (error) {
@@ -70,6 +85,13 @@ router.post('/nuevo', async (req, res) => {
         res.status(500).json({ message: 'Error al crear artículo', error: error.message });
     }
 });
+
+
+
+
+
+
+
 
 router.put("/imagen/:id", async (req, res) => {
     let id = req.params.id;

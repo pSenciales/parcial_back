@@ -4,7 +4,9 @@ const cors = require('cors');
 const PORT = 4000;
 
 const imagenesRouter = require("./controller/imagenRouter");
+const mapaRouter = require("./controller/mapasRouter");
 const articulosRouter = require("./controller/articuloRouter");
+
 
 
 const app = express();
@@ -29,5 +31,6 @@ app.listen(PORT, () => {
 
 app.use("/imagenes", imagenesRouter);
 app.use("/articulos", articulosRouter);
+app.use("/mapas", mapaRouter);
 
 module.exports = app;
