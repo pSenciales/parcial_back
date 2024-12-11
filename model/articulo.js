@@ -19,6 +19,7 @@ const AdjuntosSchema = new Schema({
   });
 
 const ArticuloSchema = new Schema({
+    autor: {type: String, required: true},
     nombre: { type: String, required: true },
     fotos: [AdjuntosSchema],
     coordenadas: [MapasSchema],
