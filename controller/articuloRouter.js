@@ -76,7 +76,7 @@ router.post('/nuevo', async (req, res) => {
             return res.status(400).json({ message: "Las coordenadas deben ser un array." });
         }
         //
-        const nuevoArticulo = await Articulo.create({autor, nombre, coordenadasObj });
+        const nuevoArticulo = await Articulo.create({autor, nombre, coordenadas:coordenadasObj });
         console.log('Artículo creado con éxito:', nuevoArticulo);
         res.status(201).json(nuevoArticulo);
     } catch (error) {
