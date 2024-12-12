@@ -76,7 +76,7 @@ router.post('/nuevo', async (req, res) => {
             return res.status(400).json({ message: "Las coordenadas deben ser un array." });
         }
         //
-        const nuevoArticulo = await Articulo.create({autor, nombre, coordenadas:coordenadasObj });
+        const nuevoArticulo = await Articulo.create({ autor, nombre, coordenadas: coordenadasObj });
         console.log('Artículo creado con éxito:', nuevoArticulo);
         res.status(201).json(nuevoArticulo);
     } catch (error) {
@@ -131,6 +131,22 @@ router.put("/:id", async (req, res) => {
     }
 })
 
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const articuloEliminado = await Articulo.findByIdAndDelete(id);
+        if (!articuloEliminado) {
+            return res.status(404).json({ message: 'Versión de artículo no encontrada' });
+        }
+        articuloEliminado.fotos.forEach(async (foto) => {
+            await axios.delete(`https://parcial-back-seven.vercel.app/imagenes/?url=${foto.url}`);
+        });
+        res.status(200).json({ message: 'Versión de artículo eliminada con éxito', articuloEliminado });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar versión del artículo', error });
+    }
+})
 
 
 
