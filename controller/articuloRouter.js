@@ -132,7 +132,7 @@ router.put("/:id", async (req, res) => {
 })
 
 
-router.delete("/:id", async (req, res) => {
+router.delete("/articulo/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const articuloEliminado = await Articulo.findByIdAndDelete(id);
