@@ -4,7 +4,7 @@ const axios = require("axios");
 const mongoose = require("mongoose");
 const Articulo = require("../model/articulo");
 
-
+IMAGE_BASE_API="https://parcial-back-seven.vercel.app/imagenes";
 //get all
 router.get("/", async (req, res) => {
     try {
@@ -132,6 +132,26 @@ router.put("/:id", async (req, res) => {
 })
 
 
-
+router.delete("/:id", async (req, res) => {
+    let id = req.params.id;
+    if (!id) {
+        res.status(400).send("Bad request, falta el campo id");
+    } else {
+        try {
+            await Articulo.findByIdAndDelete(id)
+                .then((resultado) => {
+                    if (!resultado) {
+                        res.status(404).send("Not found, no existe articulo con ese id");
+                    }else{
+                        resultado.fotos.forEach(async (foto) => {
+                            await axios.delete(`${IMAGE_BASE_API}/?url=${foto.url}`);
+                          });
+                    }
+                });
+        } catch (error) {
+            res.status(500).send("Error al actualizar el articulo: " + error);
+        }
+    }
+})
 
 module.exports = router
