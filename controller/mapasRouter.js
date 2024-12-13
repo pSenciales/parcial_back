@@ -78,7 +78,7 @@ router.post('/nuevo', async (req, res) => {
             return res.status(400).json({ message: "Las coordenadas deben ser un array." });
         }
         //
-        const nuevoMapas = await Mapas.create({ autor, nombre, coordenadas: coordenadasObj });
+        const nuevoMapas = await Mapas.create({ autor, coordenadas: coordenadasObj });
         console.log('Artículo creado con éxito:', nuevoMapas);
         res.status(201).json(nuevoMapas);
     } catch (error) {
