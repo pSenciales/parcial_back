@@ -145,16 +145,13 @@ router.put("/:id", async (req, res) => {
 })
 
 
-router.delete("/Mapas/:id", async (req, res) => {
+router.delete("/mapas/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const MapasEliminado = await Mapas.findByIdAndDelete(id);
         if (!MapasEliminado) {
             return res.status(404).json({ message: 'Versión de artículo no encontrada' });
         }
-        MapasEliminado.fotos.forEach(async (foto) => {
-            await axios.delete(`http://parcial-back-seven.vercel.app/imagenes/?url=${foto.url}`);
-        });
         res.status(200).json({ message: 'Versión de artículo eliminada con éxito', MapasEliminado });
     } catch (error) {
         res.status(500).json({ message: 'Error al eliminar versión del artículo', error });

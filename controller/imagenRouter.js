@@ -29,6 +29,7 @@ router.post("/", async (req, res) => {
             } else if (!imageFile) {
                 return res.status(400).json({ message: "Faltan datos obligatorios (imagen)" });
             }
+            
 
             try {
                 // Subir la imagen a Cloudinary
