@@ -57,7 +57,7 @@ router.post('/nuevo', async (req, res) => {
     console.log('Método HTTP:', req.method);
     console.log('Cuerpo de la solicitud:', req.body);
 
-    const { autor, nombre, foto, coordenadas } = req.body;
+    const { autor, coordenadas } = req.body;
 
     try {
         let coordenadasObj = coordenadas;
@@ -89,22 +89,31 @@ router.post('/nuevo', async (req, res) => {
 
 router.put("/imagen/:id", async (req, res) => {
     let id = req.params.id;
-    let { url, descripcion } = req.body;
-    if (!id) {
-        return res.status(400).send("Bad request, falta el campo id");
+    let { url, descripcion } = req.body; // descripcion es el lugar donde se debe agregar
+    if (!id || !url || !descripcion) {
+        return res.status(400).send("Bad request, faltan campos obligatorios");
     }
     try {
-        const Mapas = await Mapas.findById(id);
-        if (!Mapas) {
+        const mapa = await Mapas.findById(id);
+        if (!mapa) {
             return res.status(404).send("Not found, no existe Mapas con ese id");
         }
-        Mapas.fotos.push({ url, descripcion: descripcion[0] });
-        await Mapas.save();
-        res.status(200).send("Mapas actualizado:\n " + JSON.stringify(Mapas));
+
+        const coordenada = mapa.coordenadas.find(coord => coord.lugar === descripcion);
+        if (!coordenada) {
+            return res.status(404).send("Not found, no existe una coordenada con ese lugar");
+        }
+
+        coordenada.fotos.push({ url, descripcion });
+
+        await mapa.save();
+
+        res.status(200).send("Mapas actualizado:\n" + JSON.stringify(mapa));
     } catch (error) {
         res.status(500).send("Error al actualizar el Mapas: " + error);
     }
 });
+
 
 
 //Update

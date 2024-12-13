@@ -16,12 +16,12 @@ const AdjuntosSchema = new Schema({
   const CoordenadasSchema = new Schema({
     latitud: Number,
     longitud: Number, 
-    lugar: {type: String}
+    lugar: {type: String},
+    fotos: [AdjuntosSchema]
   });
 
 const MapasSchema = new Schema({
     autor: {type: String, required: true},
-    fotos: [AdjuntosSchema],
     coordenadas: [CoordenadasSchema],
     fecha: { type: Date, default: Date.now }
 });
