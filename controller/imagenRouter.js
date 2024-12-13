@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
             } else if (!imageFile) {
                 return res.status(400).json({ message: "Faltan datos obligatorios (imagen)" });
             }
-            
+
 
             try {
                 // Subir la imagen a Cloudinary
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
                 }
 
                 // Hacer la petición PUT a tu API
-                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/mapas/imagen/${id}`, {
+                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/mapas/${id}`, {
                     url: uploadResult.secure_url,
                     descripcion: descripcion,
                 });

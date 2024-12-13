@@ -89,7 +89,7 @@ router.post('/nuevo', async (req, res) => {
 
 
 
-router.put("/imagen/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     let id = req.params.id;
     console.log("ID recibido:", req.params.id);
     console.log("Cuerpo de la solicitud:", req.body);
@@ -120,29 +120,7 @@ router.put("/imagen/:id", async (req, res) => {
 
 
 
-//Update
-router.put("/:id", async (req, res) => {
-    let id = req.params.id;
-    let updated_values = req.body;
-    if (!id) {
-        res.status(400).send("Bad request, falta el campo id");
-    } else {
-        try {
-            await Mapas.findByIdAndUpdate(id, updated_values, { new: true })
-                .then((resultado) => {
-                    if (!resultado) {
-                        res.status(404).send("Not found, no existe Mapas con ese id");
-                    }
-                    else {
-                        res.status(200).send("Mapas actualizado:/n " + JSON.stringify(resultado));
-                    }
-                });
 
-        } catch (error) {
-            res.status(500).send("Error al actualizar el Mapas: " + error);
-        }
-    }
-})
 
 
 router.delete("/mapas/:id", async (req, res) => {
