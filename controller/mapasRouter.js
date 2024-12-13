@@ -91,6 +91,8 @@ router.post('/nuevo', async (req, res) => {
 
 router.put("/imagen/:id", async (req, res) => {
     let id = req.params.id;
+    console.log("ID recibido:", req.params.id);
+    console.log("Cuerpo de la solicitud:", req.body);
     let { url, descripcion } = req.body; // descripcion es el lugar donde se debe agregar
     if (!id || !url || !descripcion) {
         return res.status(400).send("Bad request, faltan campos obligatorios");
