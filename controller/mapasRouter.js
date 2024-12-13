@@ -19,16 +19,18 @@ router.get("/", async (req, res) => {
 
 //get filtro
 router.get("/filtro", async (req, res) => {
-    const { filtro, sortField, sortOrder } = req.query;
+    const { autor } = req.query;
     try {
-        const filtroBusqueda = filtro ? JSON.parse(filtro) : {};
-        const orden = sortField ? { [sortField]: sortOrder === 'asc' ? 1 : -1 } : {};
-
-        await Mapas.find(filtroBusqueda)
-            .sort(orden)
+        if(!autor){
+            await Mapas.find()
+            .then((Mapas) => {
+                res.status(200).json(Mapas);
+            });
+        }else{
+        await Mapas.find({autor:autor})
             .then((Mapas_filtrados) => {
                 res.status(200).json(Mapas_filtrados);
-            });
+            });}
     } catch (error) {
         res.status(500).send("Error al filtrar artículos: " + error);
     }

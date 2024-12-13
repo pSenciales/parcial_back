@@ -32,7 +32,7 @@ app.listen(PORT, () => {
 
 app.use("/imagenes", imagenesRouter);
 app.use("/mapas", mapasRouter);
-app.use("/coordenads", coordenadasRouter);
+app.use("/coordenadas", coordenadasRouter);
 app.use("/logs", logsRouter);
 
 module.exports = app;
