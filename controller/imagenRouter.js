@@ -30,7 +30,6 @@ router.post("/", async (req, res) => {
                 return res.status(400).json({ message: "Faltan datos obligatorios (imagen)" });
             }
 
-
             try {
                 // Subir la imagen a Cloudinary
                 const uploadResult = await cloudinary.uploader.upload(imageFile[0].filepath, {
@@ -54,7 +53,7 @@ router.post("/", async (req, res) => {
                 }
 
                 // Hacer la petición PUT a tu API
-                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/mapas/${id}`, {
+                const apiResponse = await axios.put(`https://parcial-back-seven.vercel.app/articulos/imagen/${id}`, {
                     url: uploadResult.secure_url,
                     descripcion: descripcion,
                 });

@@ -4,8 +4,8 @@ const cors = require('cors');
 const PORT = 4000;
 
 const imagenesRouter = require("./controller/imagenRouter");
-const coordenadasRouter = require("./controller/coordenadasRouter");
-const mapasRouter = require("./controller/mapasRouter");
+const mapaRouter = require("./controller/mapasRouter");
+const articulosRouter = require("./controller/articuloRouter");
 const logsRouter = require("./controller/logsRouter");
 
 
@@ -31,8 +31,8 @@ app.listen(PORT, () => {
 });
 
 app.use("/imagenes", imagenesRouter);
-app.use("/mapas", mapasRouter);
-app.use("/coordenadas", coordenadasRouter);
+app.use("/articulos", articulosRouter);
+app.use("/mapas", mapaRouter);
 app.use("/logs", logsRouter);
 
 module.exports = app;

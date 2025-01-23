@@ -1,141 +1,58 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const mongoose = require("mongoose");
-const Mapas = require("../model/mapas");
 
-
-//get all
-router.get("/", async (req, res) => {
+// Dada una dirección, llama a OpenStreetMap para obtener las coordenadas
+router.get("/:direccion", async (req, res) => {
     try {
-        await Mapas.find()
-            .then((Mapas) => {
-                res.status(200).json(Mapas);
-            });
-    } catch (error) {
-        res.status(500).send("Error al listar Mapas: " + error);
-    }
-})
+        const { direccion } = req.params; // Recibe la dirección desde los parámetros de la URL
 
-//get filtro
-router.get("/filtro", async (req, res) => {
-    const { autor } = req.query;
-    try {
-        if(!autor){
-            await Mapas.find()
-            .then((Mapas) => {
-                res.status(200).json(Mapas);
-            });
-        }else{
-        await Mapas.find({autor:autor})
-            .then((Mapas_filtrados) => {
-                res.status(200).json(Mapas_filtrados);
-            });}
+        if (!direccion) {
+            return res.status(400).json({ message: "La dirección es requerida" });
+        }
+
+        // Llama a la API de Nominatim para buscar las coordenadas
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&limit=1`;
+        const response = await axios.get(url);
+
+        if (response.data.length === 0) {
+            return res.status(404).json({ message: "No se encontraron resultados para la dirección proporcionada" });
+        }
+
+        // Extrae las coordenadas del resultado
+        const { lat, lon } = response.data[0];
+        return res.json({ direccion, lat, lon });
     } catch (error) {
-        res.status(500).send("Error al filtrar artículos: " + error);
+        console.error("Error en el servidor:", error);
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
 });
 
-//getById
-router.get("/:id", async (req, res) => {
-
-    let id = req.params.id;
+router.get("/:lat/:lon", async (req, res) => {
     try {
-        await Mapas.findById(id)
-            .then((Mapas) => {
-                if (!Mapas) {
-                    res.status(404).res("Not found, no existe Mapas con ese id")
-                } else {
-                    res.status(200).json(Mapas);
-                }
-            });
-    } catch (error) {
-        res.status(500).send("Error filtrar Mapas: " + error);
-    }
-})
+        const { lat, lon } = req.params;
 
-
-router.post('/nuevo', async (req, res) => {
-    console.log('Método HTTP:', req.method);
-    console.log('Cuerpo de la solicitud:', req.body);
-
-    const { autor, coordenadas } = req.body;
-
-    try {
-        let coordenadasObj = coordenadas;
-        if (typeof coordenadas === "string") {
-            try {
-                coordenadasObj = JSON.parse(coordenadas);  // Convertir la cadena JSON a objeto
-            } catch (e) {
-                // Si no es posible hacer el parseo, lanzamos un error
-                console.error("Error al parsear las coordenadas:", e);
-                return res.status(400).json({ message: "Las coordenadas no tienen el formato correcto." });
-            }
+        if (!lat || !lon) {
+            return res.status(400).json({ message: "Latitud y longitud son requeridas" });
         }
 
-        // Asegúrate de que las coordenadas ahora son un array de objetos
-        if (!Array.isArray(coordenadasObj)) {
-            return res.status(400).json({ message: "Las coordenadas deben ser un array." });
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lon);
+
+        if (isNaN(latitude) || isNaN(longitude)) {
+            return res.status(400).json({ message: "Latitud o longitud no son válidas" });
         }
-        //
-        const nuevoMapas = await Mapas.create({ autor, coordenadas: coordenadasObj });
-        console.log('Artículo creado con éxito:', nuevoMapas);
-        res.status(201).json(nuevoMapas);
+
+        // Construye correctamente los límites del bbox
+        const bbox = `${longitude - 0.001},${latitude - 0.001},${longitude + 0.001},${latitude + 0.001}`;
+        const iframeUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik`;
+
+        return res.json({ iframeUrl });
     } catch (error) {
-        console.error('Error al crear el artículo:', error);
-        res.status(500).json({ message: 'Error al crear artículo', error: error.message });
+        console.error("Error en el servidor al generar el iframe URL:", error);
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
 });
 
 
-
-router.put("/:id", async (req, res) => {
-    let id = req.params.id;
-    console.log("ID recibido:", req.params.id);
-    console.log("Cuerpo de la solicitud:", req.body);
-    let { url, descripcion } = req.body; // descripcion es el lugar donde se debe agregar
-    if (!id || !url || !descripcion) {
-        return res.status(400).send("Bad request, faltan campos obligatorios");
-    }
-    try {
-        const mapa = await Mapas.findById(id);
-        if (!mapa) {
-            return res.status(404).send("Not found, no existe Mapas con ese id");
-        }
-
-        const coordenada = mapa.coordenadas.find(coord => coord.lugar === descripcion);
-        if (!coordenada) {
-            return res.status(404).send("Not found, no existe una coordenada con ese lugar");
-        }
-
-        coordenada.fotos.push({ url, descripcion });
-
-        await mapa.save();
-
-        res.status(200).send("Mapas actualizado:\n" + JSON.stringify(mapa));
-    } catch (error) {
-        res.status(500).send("Error al actualizar el Mapas: " + error);
-    }
-});
-
-
-
-
-
-
-router.delete("/mapas/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const MapasEliminado = await Mapas.findByIdAndDelete(id);
-        if (!MapasEliminado) {
-            return res.status(404).json({ message: 'Versión de artículo no encontrada' });
-        }
-        res.status(200).json({ message: 'Versión de artículo eliminada con éxito', MapasEliminado });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar versión del artículo', error });
-    }
-})
-
-
-
-module.exports = router
+module.exports = router;
