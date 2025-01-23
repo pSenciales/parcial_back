@@ -60,6 +60,7 @@ router.post('/nuevo', async (req, res) => {
     const { autor, nombre, foto, coordenadas } = req.body;
 
     try {
+        console.log(coordenadas);
         let coordenadasObj = coordenadas;
         if (typeof coordenadas === "string") {
             try {

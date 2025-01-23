@@ -14,6 +14,7 @@ const AdjuntosSchema = new Schema({
   });
 
   const MapasSchema = new Schema({
+    lugar: String,
     latitud: Number,
     longitud: Number
   });
