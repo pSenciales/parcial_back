@@ -143,7 +143,7 @@ router.put("/:id", async (req, res) => {
                             foto.descripcion = descripciones[index];
                         });
                         articulo.save();
-                        res.status(200).send("articulo actualizado:/n " + JSON.stringify(resultado));
+                        res.status(200).send("articulo actualizado:/n " + JSON.stringify(articulo));
                     }
                 });
 
