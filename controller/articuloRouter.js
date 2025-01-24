@@ -111,17 +111,38 @@ router.put("/imagen/:id", async (req, res) => {
 //Update
 router.put("/:id", async (req, res) => {
     let id = req.params.id;
-    let updated_values = req.body;
+    let { nombre, coordenadas, descripciones } = req.body;
     if (!id) {
         res.status(400).send("Bad request, falta el campo id");
     } else {
         try {
-            await Articulo.findByIdAndUpdate(id, updated_values, { new: true })
-                .then((resultado) => {
-                    if (!resultado) {
+            await Articulo.findById(id)
+                .then((articulo) => {
+                    if (!articulo) {
                         res.status(404).send("Not found, no existe articulo con ese id");
                     }
                     else {
+                        let coordenadasObj = coordenadas;
+                        if (typeof coordenadas === "string") {
+                            try {
+                                coordenadasObj = JSON.parse(coordenadas);  // Convertir la cadena JSON a objeto
+                            } catch (e) {
+                                // Si no es posible hacer el parseo, lanzamos un error
+                                console.error("Error al parsear las coordenadas:", e);
+                                return res.status(400).json({ message: "Las coordenadas no tienen el formato correcto." });
+                            }
+                        }
+
+                        // Asegúrate de que las coordenadas ahora son un array de objetos
+                        if (!Array.isArray(coordenadasObj)) {
+                            return res.status(400).json({ message: "Las coordenadas deben ser un array." });
+                        }
+                        articulo.nombre = nombre;
+                        articulo.coordenadas = coordenadasObj;
+                        articulo.fotos.forEach((foto, index) => {
+                            foto.descripcion = descripciones[index];
+                        });
+                        articulo.save();
                         res.status(200).send("articulo actualizado:/n " + JSON.stringify(resultado));
                     }
                 });
