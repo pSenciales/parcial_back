@@ -22,7 +22,6 @@ const AdjuntosSchema = new Schema({
   const LogsSchema = new Schema({
     timestamp: { type: Date, default: Date.now },
     usuario: {type: String, required: true},
-    caducidad: { type: Date, required: true },
     token: { type: String, required: true }
 });
 
