@@ -19,11 +19,19 @@ const AdjuntosSchema = new Schema({
     longitud: Number
   });
 
+  const LogsSchema = new Schema({
+    timestamp: { type: Date, default: Date.now },
+    usuario: {type: String, required: true},
+    caducidad: { type: Date, required: true },
+    token: { type: String, required: true }
+});
+
 const ArticuloSchema = new Schema({
     autor: {type: String, required: true},
     nombre: { type: String, required: true },
     fotos: [AdjuntosSchema],
     coordenadas: [MapasSchema],
+    visitas: [LogsSchema],
     fecha: { type: Date, default: Date.now }
 });
 

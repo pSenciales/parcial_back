@@ -107,6 +107,31 @@ router.put("/imagen/:id", async (req, res) => {
     }
 });
 
+router.put("/visita/:id", async (req, res) => {
+    let id = req.params.id;
+    let { usuario, caducidad, token } = req.body;
+    if (!id) {
+        return res.status(400).send("Bad request, falta el campo id");
+    } else {
+        try {
+            await Articulo.findById(id)
+                .then((articulo) => {
+                    if (!articulo) {
+                        res.status(404).send("Not found, no existe articulo con ese id");
+                    }
+                    else {
+                        articulo.visitas.push({ usuario, caducidad, token });
+                        articulo.save();
+                        res.status(200).send("articulo actualizado:/n " + JSON.stringify(articulo));
+                    }
+                });
+
+        } catch (error) {
+            res.status(500).send("Error al actualizar el articulo: " + error);
+        }
+    }
+})
+
 
 //Update
 router.put("/:id", async (req, res) => {
