@@ -24,7 +24,7 @@ router.get("/filtro", async (req, res) => {
         const filtroBusqueda = filtro ? JSON.parse(filtro) : {};
         const orden = sortField ? { [sortField]: sortOrder === 'asc' ? 1 : -1 } : {};
 
-        await Articulo.find(filtroBusqueda)
+        await Pelicula.find(filtroBusqueda)
             .sort(orden)
             .then((articulos_filtrados) => {
                 res.status(200).json(articulos_filtrados);
@@ -60,7 +60,7 @@ router.post('/nuevo', async (req, res) => {
     const { titulo } = req.body;
 
     try {
-        const nuevoArticulo = await Articulo.create({ titulo });
+        const nuevoArticulo = await Pelicula.create({ titulo });
         console.log('Pelicula creada con éxito:', nuevoArticulo);
         res.status(201).json(nuevoArticulo);
     } catch (error) {

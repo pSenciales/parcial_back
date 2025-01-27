@@ -22,7 +22,7 @@ connectBD("admin", "admin").then(()=>{
 const ArticuloSchema = new Schema({
     autor: {type: String, required: true},
     nombre: { type: String, required: true },
-    coordenadas: [MapasSchema],
+    coordenadas: {type: MapasSchema, required: true},
     proyecciones: [ProyeccionSchema]
   });
 
