@@ -5,7 +5,8 @@ const PORT = 4000;
 
 const imagenesRouter = require("./controller/imagenRouter");
 const mapaRouter = require("./controller/mapasRouter");
-const articulosRouter = require("./controller/articuloRouter");
+const peliculasRouter = require("./controller/peliculaRouter");
+const salasRouter = require("./controller/salaRouter");
 const logsRouter = require("./controller/logsRouter");
 
 
@@ -31,7 +32,8 @@ app.listen(PORT, () => {
 });
 
 app.use("/imagenes", imagenesRouter);
-app.use("/articulos", articulosRouter);
+app.use("/salas", salasRouter);
+app.use("/peliculas", peliculasRouter);
 app.use("/mapas", mapaRouter);
 app.use("/logs", logsRouter);
 
