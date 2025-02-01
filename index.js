@@ -8,6 +8,7 @@ const mapaRouter = require("./controller/mapasRouter");
 const peliculasRouter = require("./controller/peliculaRouter");
 const salasRouter = require("./controller/salaRouter");
 const logsRouter = require("./controller/logsRouter");
+const detectRouter = require("./controller/detectRouter");
 
 
 
@@ -36,5 +37,6 @@ app.use("/salas", salasRouter);
 app.use("/peliculas", peliculasRouter);
 app.use("/mapas", mapaRouter);
 app.use("/logs", logsRouter);
+app.use("/detect", detectRouter);
 
 module.exports = app;
