@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer 6CJlpweZ092S3WOnzhnGNS9OmmqQJX8L`,
+                    Authorization: ``,
                 }
             }
         );
